@@ -82,7 +82,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
-            <version>2.3.0.RELEASE</version>
+<!--            <version>2.3.0.RELEASE</version>-->
         </dependency>
 
         <dependency>
@@ -157,6 +157,19 @@
             <version>${guava.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.batch</groupId>
+            <artifactId>spring-batch-core</artifactId>
+            <version>4.3.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+            <!--            // this version won work with sporing autoconfigure-->
+            <version>2.6.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -173,25 +186,6 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <!--            <plugin>-->
-            <!--                <groupId>org.bsc.maven</groupId>-->
-            <!--                <artifactId>maven-processor-plugin</artifactId>-->
-            <!--                <version>2.2.4</version>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <id>process</id>-->
-            <!--                        <goals>-->
-            <!--                            <goal>process</goal>-->
-            <!--                        </goals>-->
-            <!--                        <phase>generate-sources</phase>-->
-            <!--                        <configuration>-->
-            <!--                            <processors>-->
-            <!--                                <processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>-->
-            <!--                            </processors>-->
-            <!--                        </configuration>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--              </plugin>-->
             <plugin>
                 <groupId>com.mysema.maven</groupId>
                 <artifactId>apt-maven-plugin</artifactId>
