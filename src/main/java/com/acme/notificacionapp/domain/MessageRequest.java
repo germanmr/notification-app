@@ -33,6 +33,14 @@ public class MessageRequest {
         this.messageState = MessageStates.PENDING;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public UUID getUuid() {
         return uuid;
     }

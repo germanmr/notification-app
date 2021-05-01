@@ -9,8 +9,6 @@ import java.util.Objects;
 @Embeddable
 public class Client {
 
-    @Column(name = "client_id")
-    private Integer id;
     @Column(name = "client_name")
     private String name;
 
@@ -31,14 +29,6 @@ public class Client {
         this.favoriteMedia = Medias.valueOf(favoriteMedia);
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
@@ -56,18 +46,17 @@ public class Client {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Client client = (Client) o;
-        return Objects.equals(id, client.id) && Objects.equals(name, client.name) && favoriteMedia == client.favoriteMedia;
+        return Objects.equals(name, client.name) && favoriteMedia == client.favoriteMedia;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, favoriteMedia);
+        return Objects.hash(name, favoriteMedia);
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Client{");
-        sb.append("id=").append(id);
         sb.append(", name=").append(name);
         sb.append(", favoriteMedia=").append(favoriteMedia);
         sb.append('}');

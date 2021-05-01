@@ -26,6 +26,8 @@ public class DataLoaderImpl implements DataLoader {
         this.messageRequestService = messageRequestService;
     }
 
+    // @EventListener(ApplicationReadyEvent.class) When application is ready this fires
+    // @EventListener(ApplicationReadyEvent.class)
     @Override
     public void loadData() {
 
