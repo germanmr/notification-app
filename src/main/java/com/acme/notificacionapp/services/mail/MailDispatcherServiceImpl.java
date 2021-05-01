@@ -1,5 +1,6 @@
 package com.acme.notificacionapp.services.mail;
 
+import com.acme.notificacionapp.domain.Medias;
 import com.acme.notificacionapp.repository.MessageRequestRepository;
 import com.acme.notificacionapp.services.AbstractDispatcherServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,5 +23,6 @@ public class MailDispatcherServiceImpl extends AbstractDispatcherServiceImpl {
                                      @Value("${com.acme.notificationapp.mail.topic}") String topic) {
         super(messageRequestRepository, kafkaTemplate, objectMapper);
         setTopic(topic);
+        setMedia(Medias.MAIL);
     }
 }

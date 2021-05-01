@@ -35,8 +35,8 @@ public class NotificationApplication extends AsyncConfigurerSupport {
     public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(30);
-        executor.setQueueCapacity(1200);
+        executor.setMaxPoolSize(15);
+        executor.setQueueCapacity(50);
         executor.setThreadNamePrefix("notification-app-task-pool-");
         executor.initialize();
         return executor;

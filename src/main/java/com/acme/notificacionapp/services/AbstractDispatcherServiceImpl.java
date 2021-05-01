@@ -1,5 +1,6 @@
 package com.acme.notificacionapp.services;
 
+import com.acme.notificacionapp.domain.Medias;
 import com.acme.notificacionapp.repository.MessageRequestRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ public abstract class AbstractDispatcherServiceImpl implements DispatcherService
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
     private String topic;
+    private Medias MEDIA_TYPE;
 
     @Autowired
     public AbstractDispatcherServiceImpl(MessageRequestRepository messageRequestRepository,
@@ -32,8 +34,8 @@ public abstract class AbstractDispatcherServiceImpl implements DispatcherService
     public void dispatch(Long batchSize) {
         // Calculate batch size
         Long actualBatchsize = batchSize > MAX_BATCH_SIZE ? MAX_BATCH_SIZE : batchSize;
-        logger.info("Begginng batch publish - batch size: {actualBatchsize}", actualBatchsize);
-        messageRequestRepository.getBatchForUpdateById(actualBatchsize)
+        logger.info("Begin batch publish - batch size: {actualBatchsize}", actualBatchsize);
+        messageRequestRepository.getBatchForUpdateById(actualBatchsize, this.MEDIA_TYPE)
                 .forEach(messageRequest -> {
                     try {
                         logger.info("Begin Publish message: " + messageRequest.getId());
@@ -48,6 +50,10 @@ public abstract class AbstractDispatcherServiceImpl implements DispatcherService
                     }
                 });
         logger.info("End of batch publish - batch size: " + actualBatchsize);
+    }
+
+    protected void setMedia(Medias media) {
+        this.MEDIA_TYPE = media;
     }
 
     protected void setTopic(String topic) {

@@ -1,5 +1,6 @@
 package com.acme.notificacionapp.services.pushnotifications;
 
+import com.acme.notificacionapp.domain.Medias;
 import com.acme.notificacionapp.repository.MessageRequestRepository;
 import com.acme.notificacionapp.services.AbstractDispatcherServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,5 +23,6 @@ public class PushNotificationsDispatcherServiceImpl extends AbstractDispatcherSe
                                                   @Value("com.acme.notificationapp.push-notification.topic") String topic) {
         super(messageRequestRepository, kafkaTemplate, objectMapper);
         setTopic(topic);
+        setMedia(Medias.PUSH_NOTIFICATION);
     }
 }
