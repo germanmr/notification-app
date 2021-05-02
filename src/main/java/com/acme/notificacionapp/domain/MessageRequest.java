@@ -1,5 +1,7 @@
 package com.acme.notificacionapp.domain;
 
+import com.acme.notificacionapp.dto.MessageRequestDTO;
+
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.UUID;
@@ -90,6 +92,14 @@ public class MessageRequest {
     public void setBeginProccesing() {
         this.messageState = MessageStates.PROCESSING;
         this.error = null;
+    }
+
+    public void setAcknowledgement(MessageRequestDTO messageRequestDTO) {
+        if (MessageStates.SUCCESS.equals(messageRequestDTO.getError())) {
+            this.setSuccess();
+        } else {
+            this.setError(messageRequestDTO.getError());
+        }
     }
 
     @Override

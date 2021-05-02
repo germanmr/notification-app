@@ -17,7 +17,7 @@ import java.util.Optional;
 @Repository
 public interface MessageRequestRepository extends JpaRepository<MessageRequest, Long> {
 
-    default MessageRequest getForUpdateById(Integer id) {
+    default MessageRequest getForUpdateById(Long id) {
         return findById(id).orElse(null);
     }
 

@@ -3,6 +3,7 @@ package com.acme.notificacionapp.services;
 import com.acme.notificacionapp.domain.Client;
 import com.acme.notificacionapp.domain.MessageRequest;
 import com.acme.notificacionapp.domain.Publication;
+import com.acme.notificacionapp.dto.MessageRequestDTO;
 import com.acme.notificacionapp.repository.MessageRequestRepository;
 import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
@@ -37,6 +38,21 @@ public class MessageRequestService {
             logger.info("Saving request messageRequest: " + messageRequest);
             messageRequestRepository.save(messageRequest);
         });
+        logger.info("Saving request end");
+    }
+
+    @Transactional
+    public void updateStatus(MessageRequestDTO messageRequestDTO) throws Exception {
+        Preconditions.checkNotNull(messageRequestDTO, "The message request must not be null");
+
+        logger.info("Setting acknowledgement for messageRequestDTO: " + messageRequestDTO);
+
+        // Block the record for update on
+        MessageRequest messageRequest = messageRequestRepository.getForUpdateById(messageRequestDTO.getId());
+
+        messageRequest.setAcknowledgement(messageRequestDTO);
+        messageRequestRepository.save(messageRequest);
+
         logger.info("Saving request end");
     }
 }
