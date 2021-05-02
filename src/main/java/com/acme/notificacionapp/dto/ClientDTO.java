@@ -8,13 +8,15 @@ public class ClientDTO {
 
     private String name;
     private Medias favoriteMedia;
+    private String favoriteMediaIdentifier;
 
     public ClientDTO() {
     }
 
-    public ClientDTO(String name, Medias favoriteMedia) {
+    public ClientDTO(String name, Medias favoriteMedia, String favoriteMediaIdentifier) {
         this.name = name;
         this.favoriteMedia = favoriteMedia;
+        this.favoriteMediaIdentifier = favoriteMediaIdentifier;
     }
 
     public ClientDTO(String name, String favoriteMedia) {
@@ -32,6 +34,18 @@ public class ClientDTO {
 
     public void setFavoriteMedia(Medias favoriteMedia) {
         this.favoriteMedia = favoriteMedia;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFavoriteMediaIdentifier() {
+        return favoriteMediaIdentifier;
+    }
+
+    public void setFavoriteMediaIdentifier(String favoriteMediaIdentifier) {
+        this.favoriteMediaIdentifier = favoriteMediaIdentifier;
     }
 
     @Override

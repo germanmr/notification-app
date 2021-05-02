@@ -17,14 +17,15 @@ public class Client {
     private Medias favoriteMedia;
 
     @Column(name = "favorite_media_identifier")
-    private String favorite_media_identifier;
+    private String favoriteMediaIdentifier;
 
     public Client() {
     }
 
-    public Client(String name, Medias favoriteMedia) {
+    public Client(String name, Medias favoriteMedia, String favoriteMediaIdentifier) {
         this.name = name;
         this.favoriteMedia = favoriteMedia;
+        this.favoriteMediaIdentifier = favoriteMediaIdentifier;
     }
 
     public Client(String name, String favoriteMedia) {
@@ -42,6 +43,18 @@ public class Client {
 
     public void setFavoriteMedia(Medias favoriteMedia) {
         this.favoriteMedia = favoriteMedia;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFavoriteMediaIdentifier() {
+        return favoriteMediaIdentifier;
+    }
+
+    public void setFavoriteMediaIdentifier(String favoriteMediaIdentifier) {
+        this.favoriteMediaIdentifier = favoriteMediaIdentifier;
     }
 
     @Override
