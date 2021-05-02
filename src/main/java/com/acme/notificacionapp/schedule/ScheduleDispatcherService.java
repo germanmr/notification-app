@@ -5,6 +5,7 @@ import com.acme.notificacionapp.services.DispatcherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Profile("!" + Profiles.TEST)
@@ -21,7 +22,8 @@ public class ScheduleDispatcherService {
     private @Qualifier("smsDispatcherServiceImpl")
     DispatcherService smsDispatcherService;
 
-//    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 1000)
+//    @EventListener(ApplicationReadyEvent.class)
     public void publishMailBatchMessages() {
         // Try to fire 10 threads, just to avoid Thread pool
         for (int i = 0; i < 10; i++) {

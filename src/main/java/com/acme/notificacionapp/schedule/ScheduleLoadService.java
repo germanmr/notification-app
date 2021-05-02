@@ -17,7 +17,7 @@ public class ScheduleLoadService {
         this.dataLoader = dataLoader;
     }
 
-//    @Scheduled(fixedRate = 3000)
+    //    @Scheduled(fixedRate = 3000)
     public void publishMailBatchMessages() {
         this.dataLoader.loadData();
     }

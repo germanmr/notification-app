@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Async;
 
+import javax.transaction.Transactional;
+
 public abstract class AbstractDispatcherServiceImpl implements DispatcherService {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractDispatcherServiceImpl.class);
@@ -31,11 +33,12 @@ public abstract class AbstractDispatcherServiceImpl implements DispatcherService
 
     @Async
     @Override
+    @Transactional
     public void dispatch(Long batchSize) {
         // Calculate batch size
         Long actualBatchsize = batchSize > MAX_BATCH_SIZE ? MAX_BATCH_SIZE : batchSize;
         logger.info("Begin batch publish - batch size: {actualBatchsize}", actualBatchsize);
-        messageRequestRepository.getBatchForUpdateById(actualBatchsize, this.MEDIA_TYPE)
+        messageRequestRepository.getBatchForUpdateById(actualBatchsize)
                 .forEach(messageRequest -> {
                     try {
                         logger.info("Begin Publish message: " + messageRequest.getId());

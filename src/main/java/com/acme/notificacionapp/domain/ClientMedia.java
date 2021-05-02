@@ -7,7 +7,7 @@ import javax.persistence.Enumerated;
 import java.util.Objects;
 
 @Embeddable
-public class Client {
+public class ClientMedia {
 
     @Column(name = "client_name")
     private String name;
@@ -16,18 +16,15 @@ public class Client {
     @Column(name = "favorite_media")
     private Medias favoriteMedia;
 
-    @Column(name = "favorite_media_identifier")
-    private String favorite_media_identifier;
-
-    public Client() {
+    public ClientMedia() {
     }
 
-    public Client(String name, Medias favoriteMedia) {
+    public ClientMedia(String name, Medias favoriteMedia) {
         this.name = name;
         this.favoriteMedia = favoriteMedia;
     }
 
-    public Client(String name, String favoriteMedia) {
+    public ClientMedia(String name, String favoriteMedia) {
         this.name = name;
         this.favoriteMedia = Medias.valueOf(favoriteMedia);
     }
@@ -48,7 +45,7 @@ public class Client {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Client client = (Client) o;
+        ClientMedia client = (ClientMedia) o;
         return Objects.equals(name, client.name) && favoriteMedia == client.favoriteMedia;
     }
 

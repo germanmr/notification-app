@@ -80,13 +80,13 @@ public class MessageRequest {
     }
 
     public void setSuccess() {
-        this.messageState = MessageStates.PENDING;
+        this.messageState = MessageStates.SUCCESS;
         this.error = null;
     }
 
-    public void setError(String error) {
+    public void setError(String errorMessage) {
         this.messageState = MessageStates.ERROR;
-        this.error = error;
+        this.error = errorMessage;
     }
 
     public void setBeginProccesing() {
@@ -95,7 +95,7 @@ public class MessageRequest {
     }
 
     public void setAcknowledgement(MessageRequestDTO messageRequestDTO) {
-        if (MessageStates.SUCCESS.equals(messageRequestDTO.getError())) {
+        if (MessageStates.SUCCESS.equals(MessageStates.valueOf(messageRequestDTO.getMessageState().toString()))) {
             this.setSuccess();
         } else {
             this.setError(messageRequestDTO.getError());

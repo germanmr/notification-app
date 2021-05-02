@@ -48,7 +48,9 @@ public class MessageRequestService {
         logger.info("Setting acknowledgement for messageRequestDTO: " + messageRequestDTO);
 
         // Block the record for update on
-        MessageRequest messageRequest = messageRequestRepository.getForUpdateById(messageRequestDTO.getId());
+        MessageRequest messageRequest = messageRequestRepository
+                .findById(messageRequestDTO.getId())
+                .orElseThrow(() -> new Exception("The message request " + messageRequestDTO + " is unexistant"));
 
         messageRequest.setAcknowledgement(messageRequestDTO);
         messageRequestRepository.save(messageRequest);

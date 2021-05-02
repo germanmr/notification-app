@@ -36,8 +36,8 @@ public class AcknowledgementListener {
             throw new Exception("The body was empty!");
         }
         MessageRequestDTO messageRequestDTO = objectMapper.readValue(message, MessageRequestDTO.class);
-        logger.info("Received message - succesfully deserialize entity: {messageRequestDTO}", messageRequestDTO);
-//        messageRequestService.updateStatus(messageRequestDTO);
+        logger.info("Received message - succesfully deserialize entity: {}", messageRequestDTO);
+        messageRequestService.updateStatus(messageRequestDTO);
         logger.info("Received message - Acknowledgement with request: {} finished succesfully", messageRequestDTO);
 //        } catch (Exception e) {
 //            logger.error("ERROR - Received message - Acknowledgement: " + e.getMessage());
