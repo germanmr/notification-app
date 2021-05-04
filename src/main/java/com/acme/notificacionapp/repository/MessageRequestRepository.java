@@ -24,7 +24,7 @@ public interface MessageRequestRepository extends JpaRepository<MessageRequest, 
     Optional<MessageRequest> findById(Long id);
 
     @Query(value = "select * FROM message_request mr " +
-            " where mr.favorite_media='MAIL' " +
+            " where mr.favorite_media='MAIL' and mr.message_state in ('PENDING','ERROR')  " +
             " order by mr.id for update skip locked limit :batch_size", nativeQuery = true)
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "5000")})
     List<MessageRequest> getBatchForUpdateById(@Param("batch_size") Long batch_size);

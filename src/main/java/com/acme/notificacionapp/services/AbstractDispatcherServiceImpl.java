@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.scheduling.annotation.Async;
 
 import javax.transaction.Transactional;
 
@@ -31,7 +30,7 @@ public abstract class AbstractDispatcherServiceImpl implements DispatcherService
         this.objectMapper = objectMapper;
     }
 
-    @Async
+    //    @Async
     @Override
     @Transactional
     public void dispatch(Long batchSize) {

@@ -28,9 +28,10 @@ public class Client {
         this.favoriteMediaIdentifier = favoriteMediaIdentifier;
     }
 
-    public Client(String name, String favoriteMedia) {
+    public Client(String name, String favoriteMedia, String favoriteMediaIdentifier) {
         this.name = name;
         this.favoriteMedia = Medias.valueOf(favoriteMedia);
+        this.favoriteMediaIdentifier = favoriteMediaIdentifier;
     }
 
     public String getName() {

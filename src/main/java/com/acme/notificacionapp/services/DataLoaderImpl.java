@@ -92,7 +92,7 @@ public class DataLoaderImpl implements DataLoader {
 
         for (String line : lines) {
             String[] fields = line.split(";");
-            clients.add(new Client(fields[0], fields[1]));
+            clients.add(new Client(fields[0], fields[1], fields[2]));
         }
 
         return clients;
