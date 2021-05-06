@@ -1,0 +1,88 @@
+package com.acme.notificacionapp.config;
+
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.transaction.ChainedKafkaTransactionManager;
+import org.springframework.kafka.transaction.KafkaTransactionManager;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.AbstractPlatformTransactionManager;
+
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+@Profile(Profiles.LOCAL)
+@Configuration
+@EnableKafka
+public class KafkaProducerConfig {
+
+    @Bean(value = "kafkaTemplate")
+    @Primary
+    public KafkaTemplate<String, String> kafkaTemplate() {
+        return new KafkaTemplate<>(stringProducerFactory(), true);
+    }
+
+    @Bean(value = "stringProducerFactory")
+    @Primary
+    public ProducerFactory<String, String> stringProducerFactory() {
+        Map<String, Object> config = new ConcurrentHashMap<>();
+        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        config.put(ProducerConfig.BATCH_SIZE_CONFIG, 16384);
+        config.put(ProducerConfig.LINGER_MS_CONFIG, 100);
+        config.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
+        config.put(ProducerConfig.ACKS_CONFIG, "all");
+        DefaultKafkaProducerFactory<String, String> defaultKafkaProducerFactory = new DefaultKafkaProducerFactory<>(
+                config);
+        defaultKafkaProducerFactory.setTransactionIdPrefix("demo-transaction-");
+        return defaultKafkaProducerFactory;
+    }
+
+    @Bean(name = "chainedStringKafkaTransactionManager")
+    @Primary
+    public ChainedKafkaTransactionManager<String, String> chainedTransactionManager(
+            JpaTransactionManager jpaTransactionManager, DataSourceTransactionManager dsTransactionManager) {
+        return new ChainedKafkaTransactionManager<>(kafkaStringTransactionManager(),
+                jpaTransactionManager, dsTransactionManager);
+    }
+
+    @Bean(value = "stringKafkaTransactionManager")
+    public KafkaTransactionManager<String, String> kafkaStringTransactionManager() {
+        KafkaTransactionManager<String, String> ktm = new KafkaTransactionManager<>(
+                stringProducerFactory());
+        ktm.setNestedTransactionAllowed(true);
+        ktm.setTransactionSynchronization(AbstractPlatformTransactionManager.SYNCHRONIZATION_ALWAYS);
+        return ktm;
+    }
+
+    @Bean
+    public DataSourceTransactionManager dsTransactionManager(@Qualifier("datasource") DataSource ds) {
+        return new DataSourceTransactionManager(ds);
+    }
+
+    @Bean
+    public JpaTransactionManager jpaTransactionManager(EntityManagerFactory entityManagerFactory) {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory);
+        return transactionManager;
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+        return jpaTransactionManager(entityManagerFactory);
+    }
+
+}

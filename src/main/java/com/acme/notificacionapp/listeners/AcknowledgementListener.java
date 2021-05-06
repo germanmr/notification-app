@@ -11,13 +11,11 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 @Service
-//@KafkaListener(topics = "${com.acme.notificationappmailsender.mail.topic}", groupId = "group_id")
 public class AcknowledgementListener {
 
     private static final Logger logger = LoggerFactory.getLogger(AcknowledgementListener.class);
 
     private final ObjectMapper objectMapper;
-    private String topic;
     private final MessageRequestService messageRequestService;
 
     @Autowired
@@ -27,10 +25,8 @@ public class AcknowledgementListener {
         this.objectMapper = objectMapper;
     }
 
-    //    @KafkaListener(topics = "Kafka_Example", groupId = "group_id")
     @KafkaListener(topics = "com.acme.notificationapp.ack.topic", groupId = "group_id")
     public void consume(String message) throws Exception {
-//        try {
         logger.info("Received message - Acknowledgement:" + message);
         if (Strings.isNullOrEmpty(message)) {
             throw new Exception("The body was empty!");
@@ -39,8 +35,5 @@ public class AcknowledgementListener {
         logger.info("Received message - succesfully deserialize entity: {}", messageRequestDTO);
         messageRequestService.updateStatus(messageRequestDTO);
         logger.info("Received message - Acknowledgement with request: {} finished succesfully", messageRequestDTO);
-//        } catch (Exception e) {
-//            logger.error("ERROR - Received message - Acknowledgement: " + e.getMessage());
-//        }
     }
 }

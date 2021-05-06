@@ -22,7 +22,12 @@ public class DispatcherController {
     DispatcherService smsDispatcherService;
 
     @GetMapping("/batch")
-    public void loadData() {
-        this.smsDispatcherService.dispatch(1L);
+    public void loadBatch() {
+        this.mailDispatcherServiceImpl.dispatch(1L);
+    }
+
+    @GetMapping("/single")
+    public void loadSingle() throws Exception {
+        this.mailDispatcherServiceImpl.dispatchOne();
     }
 }
