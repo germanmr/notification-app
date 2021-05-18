@@ -1,13 +1,16 @@
 package com.acme.notificacionapp.services;
 
+import com.acme.notificacionapp.config.TransactionalHelper;
 import com.acme.notificacionapp.domain.Medias;
 import com.acme.notificacionapp.domain.MessageRequest;
 import com.acme.notificacionapp.repository.MessageRequestRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.transaction.annotation.Propagation;
 
 import javax.transaction.Transactional;
 
@@ -21,14 +24,17 @@ public abstract class AbstractDispatcherServiceImpl implements DispatcherService
     private final ObjectMapper objectMapper;
     private String topic;
     private Medias MEDIA_TYPE;
+    protected final TransactionalHelper transactionalHelper;
 
     @Autowired
     public AbstractDispatcherServiceImpl(MessageRequestRepository messageRequestRepository,
                                          KafkaTemplate<String, String> kafkaTemplate,
-                                         ObjectMapper objectMapper) {
+                                         ObjectMapper objectMapper,
+                                         TransactionalHelper transactionalHelper) {
         this.messageRequestRepository = messageRequestRepository;
         this.kafkaTemplate = kafkaTemplate;
         this.objectMapper = objectMapper;
+        this.transactionalHelper = transactionalHelper;
     }
 
     //    @Async
@@ -65,27 +71,51 @@ public abstract class AbstractDispatcherServiceImpl implements DispatcherService
     }
 
     //    @Async
-    @Transactional
+    @org.springframework.transaction.annotation.Transactional( transactionManager ="kafkaTransactionManager" ,propagation = Propagation.REQUIRED)
     @Override
-    public void dispatchOne() throws Exception {
-        logger.info("Begin single dispatch publish ");
-        MessageRequest nextMessage = messageRequestRepository.getNextMessageForUpdate();
-        if (nextMessage == null) {
-            logger.info("No new next message to publish");
-            return;
-        }
-        logger.info("Next message retrieved: {}", nextMessage);
-        nextMessage.setBeginProccesing();
-        messageRequestRepository.save(nextMessage);
-        logger.info(String.format("#### -> Dispatching message -> %s", nextMessage));
-        String message = objectMapper.writeValueAsString(nextMessage);
+    public void dispatchOne()  {
+        transactionalHelper.executeInKafkaTransaction(() -> {
+            logger.info("Begin single dispatch publish ");
+            MessageRequest nextMessage = messageRequestRepository.getNextMessageForUpdate();
+            if (nextMessage == null) {
+                logger.info("No new next message to publish");
+                return;
+            }
+            logger.info("Next message retrieved: {}", nextMessage);
+//            nextMessage.setBeginProccesing();
+//            messageRequestRepository.save(nextMessage);
+            logger.info(String.format("#### -> Dispatching message -> %s", nextMessage));
+            String message = null;
+            try {
+                message = objectMapper.writeValueAsString(nextMessage);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+            kafkaTemplate.send(topic, message);
+            logger.info("End of dispacth one");
+        });
+    }
+
+    @Override
+    @org.springframework.transaction.annotation.Transactional( propagation = Propagation.REQUIRED)
+    public void dispatchOneKafka() {
+        logger.info("Begin dispatchOneKafka");
+        String message = "{\"id\":666,\"uuid\":\"c98806fd-3cdf-4697-be0e-50374615e932\",\"client\":{\"name\":\"JUAN\",\"favoriteMedia\":\"MAIL\",\"favoriteMediaIdentifier\":\"juan@hotmail.com\"},\"publication\":{\"messages\":\"DESCUENTOS\\nPROMOCIONES\\nSE CIERRA MAS TEMPRANO EL VIERNES\"},\"error\":null,\"messageState\":\"PROCESSING\"}";
         kafkaTemplate.send(topic, message);
-        logger.info("End Publish single message: ", nextMessage.getId());
+        message = "{\"id\":999,\"uuid\":\"c98806fd-3cdf-4697-be0e-50374615e932\",\"client\":{\"name\":\"JUAN\",\"favoriteMedia\":\"MAIL\",\"favoriteMediaIdentifier\":\"juan@hotmail.com\"},\"publication\":{\"messages\":\"DESCUENTOS\\nPROMOCIONES\\nSE CIERRA MAS TEMPRANO EL VIERNES\"},\"error\":null,\"messageState\":\"PROCESSING\"}";
+        kafkaTemplate.send(topic, message);
+        logger.info("End of dispacth one");
+        throw new RuntimeException("This is a test exception");
     }
 
     @Override
     public void dispatchOneWithTransaction() throws Exception {
-
+        transactionalHelper.executeInTransaction(()->{
+            logger.info("Begin dispatchOneWithTransaction");
+            String message = "{\"id\":666,\"uuid\":\"c98806fd-3cdf-4697-be0e-50374615e932\",\"client\":{\"name\":\"JUAN\",\"favoriteMedia\":\"MAIL\",\"favoriteMediaIdentifier\":\"juan@hotmail.com\"},\"publication\":{\"messages\":\"DESCUENTOS\\nPROMOCIONES\\nSE CIERRA MAS TEMPRANO EL VIERNES\"},\"error\":null,\"messageState\":\"PROCESSING\"}";
+            kafkaTemplate.send(topic, message);
+//            throw new RuntimeException("This is a test exception");
+        });
     }
 
     protected void setMedia(Medias media) {

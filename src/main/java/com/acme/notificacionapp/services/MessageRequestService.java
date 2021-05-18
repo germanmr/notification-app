@@ -42,6 +42,22 @@ public class MessageRequestService {
     }
 
     @Transactional
+    public void elasticLoad(List<Client> clients, Publication publication) throws Exception {
+        Preconditions.checkNotNull(clients, "Clients should not be null");
+        Preconditions.checkNotNull(publication, "Publication shoul not be null");
+
+        logger.info("Saving request begin");
+
+        clients.stream().forEach(client -> {
+            MessageRequest messageRequest = new MessageRequest(client, publication);
+            logger.info("Saving request messageRequest: " + messageRequest);
+            messageRequestRepository.save(messageRequest);
+        });
+        logger.info("Saving request end");
+    }
+
+
+    @Transactional
     public void updateStatus(MessageRequestDTO messageRequestDTO) throws Exception {
         Preconditions.checkNotNull(messageRequestDTO, "The message request must not be null");
 

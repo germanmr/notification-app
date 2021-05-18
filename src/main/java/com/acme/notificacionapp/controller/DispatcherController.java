@@ -30,4 +30,19 @@ public class DispatcherController {
     public void loadSingle() throws Exception {
         this.mailDispatcherServiceImpl.dispatchOne();
     }
+
+    @GetMapping("/transactionhelper")
+    public void transactionhelper() throws Exception {
+        this.mailDispatcherServiceImpl.dispatchOne();
+    }
+
+    @GetMapping("/singlekafka")
+    public void singlekafka() {
+        this.mailDispatcherServiceImpl.dispatchOneKafka();
+    }
+
+    @GetMapping("/executeintransaction")
+    public void executeintransaction() throws Exception {
+        this.mailDispatcherServiceImpl.dispatchOneWithTransaction();
+    }
 }

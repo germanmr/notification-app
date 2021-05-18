@@ -1,5 +1,6 @@
 package com.acme.notificacionapp.services.mail;
 
+import com.acme.notificacionapp.config.TransactionalHelper;
 import com.acme.notificacionapp.domain.Medias;
 import com.acme.notificacionapp.repository.MessageRequestRepository;
 import com.acme.notificacionapp.services.AbstractDispatcherServiceImpl;
@@ -20,8 +21,9 @@ public class MailDispatcherServiceImpl extends AbstractDispatcherServiceImpl {
     public MailDispatcherServiceImpl(MessageRequestRepository messageRequestRepository,
                                      KafkaTemplate<String, String> kafkaTemplate,
                                      ObjectMapper objectMapper,
-                                     @Value("${com.acme.notificationapp.mail.topic}") String topic) {
-        super(messageRequestRepository, kafkaTemplate, objectMapper);
+                                     @Value("${com.acme.notificationapp.mail.topic}") String topic,
+                                     TransactionalHelper transactionalHelper) {
+        super(messageRequestRepository, kafkaTemplate, objectMapper, transactionalHelper);
         setTopic(topic);
         setMedia(Medias.MAIL);
     }

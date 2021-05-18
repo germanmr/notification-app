@@ -4,6 +4,7 @@ import com.acme.notificacionapp.config.Profiles;
 import com.acme.notificacionapp.services.DataLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Profile("!" + Profiles.TEST)
