@@ -25,7 +25,7 @@ public class AcknowledgementListener {
         this.objectMapper = objectMapper;
     }
 
-    @KafkaListener(topics = "com.acme.notificationapp.ack.topic", groupId = "group_id")
+//    @KafkaListener(topics = "com.acme.notificationapp.ack.topic", groupId = "group_id")
     public void consume(String message) throws Exception {
         logger.info("Received message - Acknowledgement:" + message);
         if (Strings.isNullOrEmpty(message)) {

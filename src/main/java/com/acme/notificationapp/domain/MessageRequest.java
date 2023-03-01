@@ -15,9 +15,11 @@ public class MessageRequest {
     private Long id;
     @Column(name = "uuid")
     private UUID uuid;
-    @Embedded
+    @ManyToOne
+    @JoinColumn(name = "client_id")
     private Client client;
-    @Embedded
+    @ManyToOne
+    @JoinColumn(name = "publication_id")
     private Publication publication;
     @Column(name = "error")
     private String error;
