@@ -41,8 +41,5 @@ class MessageRequestProjectionTest {
         // then
         Map<MessageStates, Set<MessageRequest>> expected = new HashMap<>();
         Assert.assertTrue(underTest.getMessageRequestsByMessageState().size() == 1);
-//        expected.put(MessageStates.PENDING,
-//                new HashSet<>(Arrays.asList(new MessageRequest(uuid, TestData.CLIENT, TestData.PUBLICATION))));
-//        Assert.assertEquals(expected, underTest.getMessageRequestsByMessageState());
     }
 }
