@@ -38,6 +38,13 @@ public class Client {
         this.favoriteMedia = Medias.valueOf(favoriteMedia);
         this.favoriteMediaIdentifier = favoriteMediaIdentifier;
     }
+
+    public Client(Long id, String name, Medias favoriteMedia, String favoriteMediaIdentifier) {
+        this.id = id;
+        this.name = name;
+        this.favoriteMedia = favoriteMedia;
+        this.favoriteMediaIdentifier = favoriteMediaIdentifier;
+    }
 //
 //    public String getName() {
 //        return name;

@@ -37,6 +37,13 @@ public class MessageRequest {
         this.messageState = MessageStates.PENDING;
     }
 
+    public MessageRequest(UUID uuid, Client client, Publication publication) {
+        this.uuid = uuid;
+        this.client = client;
+        this.publication = publication;
+        this.messageState = MessageStates.PENDING;
+    }
+
     public Long getId() {
         return id;
     }

@@ -2,7 +2,7 @@ package com.acme.notificationapp.controller;
 
 import com.acme.notificationapp.aggregates.MessageRequestAggregate;
 import com.acme.notificationapp.commands.CreateMessageRequestCommand;
-import lombok.Data;
+import com.acme.notificationapp.dto.CreateMessageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,9 +24,4 @@ public class MessageRequestController {
                 new CreateMessageRequestCommand(request.getClientId(), request.getPublicationId()));
     }
 
-    @Data
-    public final class CreateMessageRequest {
-        private final Long clientId;
-        private final Long publicationId;
-    }
 }

@@ -23,11 +23,12 @@ public class MessageRequestAggregate {
 
     private final ClientReadRepository clientReadRepository;
     private final PublicationReadRepository publicationReadRepository;
-
     private final EventStore writeRepository;
 
     @Autowired
-    public MessageRequestAggregate(ClientReadRepository clientReadRepository, PublicationReadRepository publicationReadRepository, EventStore repository) {
+    public MessageRequestAggregate(ClientReadRepository clientReadRepository,
+                                   PublicationReadRepository publicationReadRepository,
+                                   EventStore repository) {
         this.clientReadRepository = clientReadRepository;
         this.publicationReadRepository = publicationReadRepository;
         this.writeRepository = repository;

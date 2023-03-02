@@ -8,16 +8,14 @@ import com.acme.notificationapp.events.Event;
 import com.acme.notificationapp.events.MessageRequestCreatedEvent;
 import com.acme.notificationapp.repository.ClientReadRepository;
 import com.acme.notificationapp.repository.PublicationReadRepository;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.Assert;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class MessageRequestAggregateTest {
@@ -26,9 +24,14 @@ class MessageRequestAggregateTest {
     private MessageRequestAggregate underTest;
     @Autowired
     private ClientReadRepository clientReadRepository;
-
     @Autowired
     private PublicationReadRepository publicationReadRepository;
+
+    @BeforeEach
+    public void beforeEach() {
+        clientReadRepository.deleteAll();
+        publicationReadRepository.deleteAll();
+    }
 
     @Test
     void handleCreateMessageRequestCommand() {
@@ -36,7 +39,6 @@ class MessageRequestAggregateTest {
         // given
         Client client = clientReadRepository.save(new Client("German 1", Medias.SMS, "SMS"));
         Publication publication = publicationReadRepository.save(new Publication("Hello, your account is about to expire"));
-
 
         // when
         List<Event> actual = underTest

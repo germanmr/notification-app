@@ -19,6 +19,11 @@ public class Publication implements HasAdaptedMessage {
     public Publication() {
     }
 
+    public Publication(Long id, String messages) {
+        this.id = id;
+        this.messages = messages;
+    }
+
     public Publication(String messages) {
         this.messages = messages;
     }
