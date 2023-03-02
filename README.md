@@ -1,4 +1,4 @@
-# notification-app
+# An app to implement basic concepts as a Poc
 
 Basic implementation of CQRS(Command Query Responsibility Separation] )
 
