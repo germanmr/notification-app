@@ -1,11 +1,11 @@
-package com.acme.notificationapp.dto;
+package com.acme.notificationapp.command;
 
 import lombok.Data;
 
 import java.util.UUID;
 
 @Data
-public final class CreateMessageRequest {
+public final class CreateMessageRequestCommand implements Command {
     private final UUID messageRequestId;
     private final Long clientId;
     private final Long publicationId;

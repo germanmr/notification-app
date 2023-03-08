@@ -1,9 +1,9 @@
-package com.acme.notificationapp.commands;
+package com.acme.notificationapp.command;
 
 import com.acme.notificationapp.domain.MessageStates;
 import lombok.Data;
 
 @Data
 public class MessageRequestByMessageStateQuery {
-    private MessageStates messageState;
+    private final MessageStates messageState;
 }

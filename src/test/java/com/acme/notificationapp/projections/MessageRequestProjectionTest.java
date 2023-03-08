@@ -1,13 +1,9 @@
 package com.acme.notificationapp.projections;
 
 import com.acme.notificationapp.TestData;
-import com.acme.notificationapp.domain.MessageRequest;
-import com.acme.notificationapp.domain.MessageStates;
 import com.acme.notificationapp.events.Event;
 import com.acme.notificationapp.events.MessageRequestCreatedEvent;
 import org.junit.Assert;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,28 +14,19 @@ import java.util.*;
 class MessageRequestProjectionTest {
 
     @Autowired
-    private MessageRequestProjection underTest;
+    private MessageRequestProjector underTest;
 
-    @BeforeEach
-    void setUp() {
-    }
-
-    @AfterEach
-    void tearDown() {
-    }
+    private final UUID messageRequestId = UUID.randomUUID();
 
     @Test
     void project() {
         // given
-        UUID uuid = UUID.randomUUID();
-        String messageRequestId = "1";
-        List<Event> events = Arrays.asList(new MessageRequestCreatedEvent(TestData.CLIENT, TestData.PUBLICATION));
+        List<Event> events = Arrays.asList(new MessageRequestCreatedEvent(messageRequestId, TestData.CLIENT, TestData.PUBLICATION));
 
         // when
-        underTest.project(messageRequestId, events);
+        underTest.project(messageRequestId.toString(), events);
 
         // then
-        Map<MessageStates, Set<MessageRequest>> expected = new HashMap<>();
         Assert.assertTrue(underTest.getMessageRequestsByMessageState().size() == 1);
     }
 }

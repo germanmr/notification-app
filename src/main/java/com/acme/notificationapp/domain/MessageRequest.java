@@ -1,13 +1,21 @@
 package com.acme.notificationapp.domain;
 
 import com.acme.notificationapp.dto.MessageRequestDTO;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.UUID;
 
+@Getter
+@Setter
+@ToString(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "message_request")
+@NoArgsConstructor
 public class MessageRequest {
 
     @Id
@@ -15,10 +23,13 @@ public class MessageRequest {
     private Long id;
     @Column(name = "uuid")
     private UUID uuid;
-    @ManyToOne
+
+    // Child
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "client_id")
+    @ToString.Exclude
     private Client client;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "publication_id")
     private Publication publication;
     @Column(name = "error")
@@ -26,9 +37,6 @@ public class MessageRequest {
     @Enumerated(EnumType.STRING)
     @Column(name = "message_state")
     private MessageStates messageState;
-
-    public MessageRequest() {
-    }
 
     public MessageRequest(Client client, Publication publication) {
         this.uuid = UUID.randomUUID();
@@ -44,48 +52,12 @@ public class MessageRequest {
         this.messageState = MessageStates.PENDING;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+    public MessageRequest(Long id, UUID uuid, Client client, Publication publication) {
         this.id = id;
-    }
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
         this.uuid = uuid;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
         this.client = client;
-    }
-
-    public Publication getPublication() {
-        return publication;
-    }
-
-    public void setPublication(Publication publication) {
         this.publication = publication;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public MessageStates getMessageState() {
-        return messageState;
-    }
-
-    public void setMessageState(MessageStates messageState) {
-        this.messageState = messageState;
+        this.messageState = MessageStates.PENDING;
     }
 
     public void setSuccess() {
@@ -116,12 +88,12 @@ public class MessageRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MessageRequest that = (MessageRequest) o;
-        return Objects.equals(id, that.id) && Objects.equals(uuid, that.uuid) && Objects.equals(client, that.client) && Objects.equals(publication, that.publication) && Objects.equals(error, that.error) && messageState == that.messageState;
+        return Objects.equals(id, that.id) && Objects.equals(uuid, that.uuid) && Objects.equals(error, that.error) && messageState == that.messageState;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, uuid, client, publication, error, messageState);
+        return Objects.hash(id, uuid, error, messageState);
     }
 
     @Override
@@ -129,8 +101,6 @@ public class MessageRequest {
         final StringBuilder sb = new StringBuilder("MessageRequest{");
         sb.append("id=").append(id);
         sb.append(", uuid=").append(uuid);
-        sb.append(", client=").append(client);
-        sb.append(", publication=").append(publication);
         sb.append(", error='").append(error).append('\'');
         sb.append(", messageState=").append(messageState);
         sb.append('}');

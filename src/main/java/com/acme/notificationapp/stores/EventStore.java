@@ -16,7 +16,7 @@ public class EventStore {
     public void addEvent(String id, Event event) {
         List<Event> events = store.get(id);
         if (events == null) {
-            events = new ArrayList<Event>();
+            events = new ArrayList<>();
             events.add(event);
             store.put(id, events);
         } else {

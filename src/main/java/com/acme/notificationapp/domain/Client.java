@@ -1,8 +1,12 @@
 package com.acme.notificationapp.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -23,6 +27,12 @@ public class Client {
 
     @Column(name = "favorite_media_identifier")
     private String favoriteMediaIdentifier;
+
+    // Parent
+    @JsonIgnore
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @ToString.Exclude
+    private List<MessageRequest> messageRequests = new ArrayList<>();
 
     public Client() {
     }
@@ -45,50 +55,19 @@ public class Client {
         this.favoriteMedia = favoriteMedia;
         this.favoriteMediaIdentifier = favoriteMediaIdentifier;
     }
-//
-//    public String getName() {
-//        return name;
-//    }
-//
-//    public Medias getFavoriteMedia() {
-//        return favoriteMedia;
-//    }
-//
-//    public void setFavoriteMedia(Medias favoriteMedia) {
-//        this.favoriteMedia = favoriteMedia;
-//    }
-//
-//    public void setName(String name) {
-//        this.name = name;
-//    }
-//
-//    public String getFavoriteMediaIdentifier() {
-//        return favoriteMediaIdentifier;
-//    }
-//
-//    public void setFavoriteMediaIdentifier(String favoriteMediaIdentifier) {
-//        this.favoriteMediaIdentifier = favoriteMediaIdentifier;
-//    }
-//
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        Client client = (Client) o;
-//        return Objects.equals(name, client.name) && favoriteMedia == client.favoriteMedia;
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(name, favoriteMedia);
-//    }
-//
-//    @Override
-//    public String toString() {
-//        final StringBuilder sb = new StringBuilder("Client{");
-//        sb.append(", name=").append(name);
-//        sb.append(", favoriteMedia=").append(favoriteMedia);
-//        sb.append('}');
-//        return sb.toString();
-//    }
+
+    public void addMessageRequest(MessageRequest messageRequest) {
+        messageRequests.add(messageRequest);
+        messageRequest.setClient(this);
+    }
+
+    public void removeMessageRequest(MessageRequest messageRequest) {
+        messageRequests.remove(messageRequest);
+        messageRequest.setClient(null);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

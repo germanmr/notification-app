@@ -19,14 +19,14 @@ public class MessageRequestServiceCQRS {
         this.repository = repository;
     }
 
-    public void create(Client client, Publication publication) {
-        repository.save(new MessageRequest(client, publication));
+    public MessageRequest create(Client client, Publication publication) {
+        return repository.save(new MessageRequest(client, publication));
     }
 
-    public void update(Long messageRequestId, Client client, Publication publication) {
+    public MessageRequest update(Long messageRequestId, Client client, Publication publication) {
         MessageRequest messageRequest = repository.getOne(messageRequestId);
         messageRequest.setClient(client);
         messageRequest.setPublication(publication);
-        repository.save(messageRequest);
+        return repository.save(messageRequest);
     }
 }

@@ -29,7 +29,7 @@ public class MessageRequestService {
     @Transactional
     public void saveData(List<Client> clients, Publication publication) throws Exception {
         Preconditions.checkNotNull(clients, "Clients should not be null");
-        Preconditions.checkNotNull(publication, "Publication shoul not be null");
+        Preconditions.checkNotNull(publication, "Publication should not be null");
 
         logger.info("Saving request begin");
 
