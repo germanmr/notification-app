@@ -1,16 +1,19 @@
 package com.acme.notificationapp.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
 @Entity
-@Data
 public class Client {
 
     @Id
@@ -33,9 +36,6 @@ public class Client {
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @ToString.Exclude
     private List<MessageRequest> messageRequests = new ArrayList<>();
-
-    public Client() {
-    }
 
     public Client(String name, Medias favoriteMedia, String favoriteMediaIdentifier) {
         this.name = name;
@@ -64,10 +64,5 @@ public class Client {
     public void removeMessageRequest(MessageRequest messageRequest) {
         messageRequests.remove(messageRequest);
         messageRequest.setClient(null);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
     }
 }

@@ -42,11 +42,12 @@ public abstract class AbstractDispatcherServiceImpl implements DispatcherService
     @Transactional
     // This transation rollsback postgresSql and kafka!
     // Tratamos de tener lotes un poco mas grandes y esperar menos errores
-    // Para lotes mas chicos esperamos muchos errores
+    // If error rate is low, we use big size batches
+    // If error rate is high, we use small size batches
     public void dispatch(Long batchSize) {
         Long actualBatchSize = batchSize > MAX_BATCH_SIZE ? MAX_BATCH_SIZE : batchSize;
         logger.info("Begin batch publish - batch size: {}", actualBatchSize);
-        messageRequestReadRepository.getBatchForUpdateById(actualBatchSize)
+        messageRequestReadRepository.getBatchForUpdateById(1L)
                 .forEach(messageRequest -> {
                     try {
                         logger.info("Begin Publish message: " + messageRequest.getId());
@@ -71,9 +72,9 @@ public abstract class AbstractDispatcherServiceImpl implements DispatcherService
     }
 
     //    @Async
-    @org.springframework.transaction.annotation.Transactional( transactionManager ="kafkaTransactionManager" ,propagation = Propagation.REQUIRED)
+    @org.springframework.transaction.annotation.Transactional(transactionManager = "kafkaTransactionManager", propagation = Propagation.REQUIRED)
     @Override
-    public void dispatchOne()  {
+    public void dispatchOne() {
         transactionalHelper.executeInKafkaTransaction(() -> {
             logger.info("Begin single dispatch publish ");
             MessageRequest nextMessage = messageRequestReadRepository.getNextMessageForUpdate();
@@ -97,7 +98,7 @@ public abstract class AbstractDispatcherServiceImpl implements DispatcherService
     }
 
     @Override
-    @org.springframework.transaction.annotation.Transactional( propagation = Propagation.REQUIRED)
+    @org.springframework.transaction.annotation.Transactional(propagation = Propagation.REQUIRED)
     public void dispatchOneKafka() {
         logger.info("Begin dispatchOneKafka");
         String message = "{\"id\":666,\"uuid\":\"c98806fd-3cdf-4697-be0e-50374615e932\",\"client\":{\"name\":\"JUAN\",\"favoriteMedia\":\"MAIL\",\"favoriteMediaIdentifier\":\"juan@hotmail.com\"},\"publication\":{\"messages\":\"DESCUENTOS\\nPROMOCIONES\\nSE CIERRA MAS TEMPRANO EL VIERNES\"},\"error\":null,\"messageState\":\"PROCESSING\"}";
@@ -110,7 +111,7 @@ public abstract class AbstractDispatcherServiceImpl implements DispatcherService
 
     @Override
     public void dispatchOneWithTransaction() throws Exception {
-        transactionalHelper.executeInTransaction(()->{
+        transactionalHelper.executeInTransaction(() -> {
             logger.info("Begin dispatchOneWithTransaction");
             String message = "{\"id\":666,\"uuid\":\"c98806fd-3cdf-4697-be0e-50374615e932\",\"client\":{\"name\":\"JUAN\",\"favoriteMedia\":\"MAIL\",\"favoriteMediaIdentifier\":\"juan@hotmail.com\"},\"publication\":{\"messages\":\"DESCUENTOS\\nPROMOCIONES\\nSE CIERRA MAS TEMPRANO EL VIERNES\"},\"error\":null,\"messageState\":\"PROCESSING\"}";
             kafkaTemplate.send(topic, message);

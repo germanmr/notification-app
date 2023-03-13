@@ -51,7 +51,6 @@ public class DataLoaderImpl implements DataLoader {
             logger.info("Generating request process finished successfully");
         } catch (Exception e) {
             logger.error("There was an error when building message requests: " + e.getMessage());
-            return;
         }
     }
 

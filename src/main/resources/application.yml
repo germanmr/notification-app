@@ -6,3 +6,10 @@ spring:
       bootstrap-servers: localhost:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  elasticsearch:
+    rest:
+      uris: localhost:9200
+      connection-timeout: 1s
+      read-timeout: 1m
+      password:
+      username:

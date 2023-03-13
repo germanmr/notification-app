@@ -4,7 +4,9 @@ import com.acme.notificationapp.domain.Client;
 import com.acme.notificationapp.domain.MessageRequest;
 import com.acme.notificationapp.domain.Publication;
 import com.acme.notificationapp.dto.MessageRequestDTO;
+import com.acme.notificationapp.repository.ClientWriteRepository;
 import com.acme.notificationapp.repository.MessageRequestReadRepository;
+import com.acme.notificationapp.repository.PublicationWriteRepository;
 import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,11 +21,17 @@ public class MessageRequestService {
 
     private static final Logger logger = LoggerFactory.getLogger(MessageRequestService.class);
 
-    @Autowired
     private final MessageRequestReadRepository messageRequestReadRepository;
+    private final ClientWriteRepository clientWriteRepository;
+    private final PublicationWriteRepository publicationWriteRepository;
 
-    public MessageRequestService(MessageRequestReadRepository messageRequestReadRepository) {
+    @Autowired
+    public MessageRequestService(MessageRequestReadRepository messageRequestReadRepository,
+                                 ClientWriteRepository clientWriteRepository,
+                                 PublicationWriteRepository publicationWriteRepository) {
         this.messageRequestReadRepository = messageRequestReadRepository;
+        this.clientWriteRepository = clientWriteRepository;
+        this.publicationWriteRepository = publicationWriteRepository;
     }
 
     @Transactional
@@ -34,6 +42,8 @@ public class MessageRequestService {
         logger.info("Saving request begin");
 
         clients.stream().forEach(client -> {
+            clientWriteRepository.save(client);
+            publicationWriteRepository.save(publication);
             MessageRequest messageRequest = new MessageRequest(client, publication);
             logger.info("Saving request messageRequest: " + messageRequest);
             messageRequestReadRepository.save(messageRequest);

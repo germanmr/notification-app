@@ -41,14 +41,14 @@ public class DataLoaderTest {
     }
 
     @Test
-    public void testLoadDataSuccessfull() {
+    public void testLoadDataSuccessfully() {
         dataLoader.loadData();
         List<MessageRequest> all = messageRequestReadRepository.findAll();
         all.stream().forEach(MessageRequest::toString);
     }
 
     @Test
-    public void testLoadDataAndPublishMessagesSuccessfull() {
+    public void testLoadDataAndPublishMessagesSuccessfully() {
         dataLoader.loadData();
 
         mailDispatcherService.dispatch(10L);
