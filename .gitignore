@@ -37,4 +37,4 @@ logs/
 /target/
 *.classpath
 *.project
-/data/
+data/
