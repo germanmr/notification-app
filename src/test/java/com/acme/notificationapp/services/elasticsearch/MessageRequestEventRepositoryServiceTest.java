@@ -9,9 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.UUID;
 
-import static com.acme.notificationapp.TestData.*;
+import static com.acme.notificationapp.TestData.exampleMessageRequestCreatedEvent;
 
 @SpringBootTest
 public class MessageRequestEventRepositoryServiceTest {
@@ -25,17 +26,12 @@ public class MessageRequestEventRepositoryServiceTest {
     void createMessageRequestEventIndex() throws JsonProcessingException {
         // given
         UUID messageRequestId = UUID.randomUUID();
-
         MessageRequestCreatedEvent createdEvent = exampleMessageRequestCreatedEvent(messageRequestId);
-
         String eventType = createdEvent.getClass().toString();
-
         String createdEventJson = mapper.writeValueAsString(createdEvent);
-
         MessageRequestEvent messageRequestEvent = new MessageRequestEvent(createdEvent.getMessageRequestId().toString(),
                 createdEventJson,
                 eventType);
-
         MessageRequestEvent actual = repository.index(messageRequestEvent);
 
         MessageRequestEvent expected = new MessageRequestEvent(messageRequestId.toString(),
@@ -49,6 +45,22 @@ public class MessageRequestEventRepositoryServiceTest {
     }
 
     @Test
-    void findEventsByMessageRequest() {
+    void findEventsByMessageRequest() throws JsonProcessingException {
+        // given
+        repository.deleteIndex();
+        UUID messageRequestId = UUID.randomUUID();
+        MessageRequestCreatedEvent createdEvent = exampleMessageRequestCreatedEvent(messageRequestId);
+        String eventType = createdEvent.getClass().toString();
+        String createdEventJson = mapper.writeValueAsString(createdEvent);
+        MessageRequestEvent messageRequestEvent = new MessageRequestEvent(createdEvent.getMessageRequestId().toString(),
+                createdEventJson,
+                eventType);
+        repository.index(messageRequestEvent);
+
+        // when
+        List<MessageRequestEvent> actual = repository.findEventsByMessageRequest(messageRequestId);
+
+        // then
+        Assert.assertFalse(actual.isEmpty());
     }
 }
