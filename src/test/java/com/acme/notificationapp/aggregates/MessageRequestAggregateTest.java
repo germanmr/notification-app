@@ -10,6 +10,7 @@ import com.acme.notificationapp.projections.MessageRequestProjector;
 import com.acme.notificationapp.projectors.MessageRequestProjection;
 import com.acme.notificationapp.repository.BaseDatabaseTest;
 import com.acme.notificationapp.repository.MessageRequestReadRepositoryInMemory;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,7 +52,7 @@ class MessageRequestAggregateTest extends BaseDatabaseTest {
     }
 
     @Test
-    void handleCreateMessageRequestCommand() {
+    void handleCreateMessageRequestCommand() throws JsonProcessingException {
         // given
         Client client = clientReadRepository.save(new Client("German 1", Medias.SMS, "SMS"));
         Publication publication = publicationReadRepository.save(new Publication("Hello, your account is about to expire"));
@@ -70,7 +71,7 @@ class MessageRequestAggregateTest extends BaseDatabaseTest {
     }
 
     @Test
-    public void handle() {
+    public void handle() throws JsonProcessingException {
         Client client2 = clientReadRepository.save(new Client(2L, "German 2", Medias.MAIL, "MAIL"));
         Publication publication2 = publicationReadRepository.save(new Publication(2L, "Hello, your account is now open"));
         List<Event> events = null;
